@@ -39,7 +39,7 @@ class RepeatCharactersTest extends TestCase
             ['aftershock', true],
             ['six-year-old', true],
             ['Double-down', false],
-            ['epidemic', true]
+            ['epidemic', false]
         ];
     }
 
