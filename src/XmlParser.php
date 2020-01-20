@@ -7,6 +7,8 @@
  */
 
 namespace TDD;
+require_once dirname(dirname(__FILE__)). DIRECTORY_SEPARATOR.'vendor'.DIRECTORY_SEPARATOR.'autoload.php';
+use Symfony\Component\Yaml\Yaml;
 
 
 class XmlParser
@@ -40,10 +42,24 @@ class XmlParser
         return $ret;
     }
 
+    public function xmlToYaml($yamlfileName){
+        $array = $this->xmlToArray();
+        //var_dump($array);
+        $yaml = Yaml::dump($array);
+
+        file_put_contents($yamlfileName, $yaml);
+    }
+
+    private function xmlToArray(){
+        $json = json_encode($this->_xml);
+        $array = json_decode($json, true);
+        return $array;
+    }
+
     private function parseXml(){
         $this->_xml = simplexml_load_file($this->_filepath);
     }
 }
 
 $xmlparser = new XmlParser('../sample-reaxml.xml');
-$xmlparser->parseStatePrices();
+$xmlparser->xmlToYaml('../sample.yaml');

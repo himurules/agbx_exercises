@@ -11,5 +11,8 @@
     "psr-4": {
       "TDD\\Test\\": "tests/"
     }
+  },
+  "require": {
+    "symfony/yaml": "^3.4"
   }
 }
