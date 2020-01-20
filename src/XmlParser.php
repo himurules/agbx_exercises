@@ -11,15 +11,39 @@ namespace TDD;
 
 class XmlParser
 {
-    public function parseXml($filePath){
+    protected $_xml = null;
+    protected  $_filepath = null;
+    public function __construct($filepath)
+    {
+        $this->_filepath = $filepath;
+        $this->parseXml();
+    }
+
+    public function parseUniqueIds(){
         $ret = [];
-        $xml = simplexml_load_file($filePath);
-        foreach($xml->children() as $child){
-            $return[(string)$child->uniqueID] = $child->getName();
+        foreach($this->_xml->children() as $child){
+            $ret[(string)$child->uniqueID] = $child->getName();
         }
         return $ret;
     }
+    public function parseStatePrices(){
+        $ret = [];
+        foreach($this->_xml->children() as $child){
+            if(isset($child->price)) {
+                    $ret[(string)$child->address->state][] = (double)$child->price;
+            }
+        }
+
+        foreach($ret as $key=>$value){
+            $ret[$key] = round((array_sum($value)/count($value)),2);
+        }
+        return $ret;
+    }
+
+    private function parseXml(){
+        $this->_xml = simplexml_load_file($this->_filepath);
+    }
 }
 
-$xmlparser = new XmlParser();
-$xmlparser->parseXml('../sample-reaxml.xml');
+$xmlparser = new XmlParser('../sample-reaxml.xml');
+$xmlparser->parseStatePrices();
